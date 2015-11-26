@@ -7,7 +7,7 @@ require 'json'
 
 use Rack::Session::Cookie
 use OmniAuth::Builder do
-	provider :twitter, consumer_key, consumer_secret
+	provider :twitter, "kVdTORs1LCUtcJXDE5AXm1WW9", "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
 end
 
 configure do
@@ -17,8 +17,8 @@ end
 client = Twitter::REST:Client.new do |config|
 	config.consumer_key = "kVdTORs1LCUtcJXDE5AXm1WW9"
 	config.consumer_secret = "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
-	#config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
-	#config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
+	config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
+	config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
 end
 
 helpers do
@@ -82,6 +82,6 @@ get '/logout' do
 	HTML
 end
 
-# get 'tweet' do
-# 	client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
-# end
+get 'tweet' do
+	client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
+end
