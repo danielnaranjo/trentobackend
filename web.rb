@@ -5,13 +5,25 @@ require 'omniauth-twitter'
 require 'twitter'
 require 'json'
 
+consumer_key = "kVdTORs1LCUtcJXDE5AXm1WW9"
+consumer_secret = "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
+access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
+access_token_secret ="IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
+
 use Rack::Session::Cookie
 use OmniAuth::Builder do
-	provider :twitter, 'kVdTORs1LCUtcJXDE5AXm1WW9','pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf'
+	provider :twitter, consumer_key, consumer_secret
 end
 
 configure do
 	enable :sessions
+end
+
+client = Twitter::REST:Client.new do |config|
+	config.consumer_key = consumer_key
+	config.consumer_secret = consumer_secret
+	config.access_token = access_token
+	config.access_token_secret = access_token_secret
 end
 
 helpers do
@@ -67,11 +79,14 @@ get '/auth/failure' do
 	redirect to('/?error='+params[:message])
 end
 
-
 get '/logout' do
 	session[:admin] = nil
 	redirect to('/?status=byebye')
 	<<-HTML
 		<h3>You're Out!</h3>
 	HTML
+end
+
+get 'tweet' do
+	client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
 end
