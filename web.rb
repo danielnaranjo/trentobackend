@@ -91,11 +91,12 @@ get '/tweet' do
 		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
 	end
 	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
-	client.update("I'm tweeting with @gem!")
+	#client.update("I'm tweeting with @gem!")
 	<<-HTML
 		<h3>Do you want to get out?</h3>
 		<p><a href="/logout">Logout</a></p>
 	HTML
+	redirect to('/tweets?username=naranjodaniel')
 end
 
 get '/tweets' do
