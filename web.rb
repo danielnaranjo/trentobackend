@@ -120,6 +120,5 @@ get '/tweetbyuser' do
 			user_timeline(user, options)
 		end
 	end
-
-client.get_all_tweets(username)
+	client.get_all_tweets(username)
 end
