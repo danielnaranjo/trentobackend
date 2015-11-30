@@ -107,7 +107,19 @@ get '/tweetbyuser' do
 		config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
 		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
 	end
-	client.sample do |object|
-		puts object.text if object.is_a?(Twitter::Tweet)
+	def collect_with_max_id(collection=[], max_id=nil, &block)
+		response = yield(max_id)
+		collection += response
+		response.empty? ? collection.flatten : collect_with_max_id(collection, response.last.id - 1, &block)
 	end
+
+	def client.get_all_tweets(user)
+		collect_with_max_id do |max_id|
+			options = {count: 200, include_rts: true}
+			options[:max_id] = max_id unless max_id.nil?
+			user_timeline(user, options)
+		end
+	end
+
+client.get_all_tweets(username)
 end
