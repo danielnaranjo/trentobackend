@@ -66,8 +66,8 @@ get '/auth/twitter/callback' do
 	# <p>#{:description}</p>
 	# <p>#{:location}</p>
 	# HTML
-	#env['omniauth.auth'].to_json
-	redirect to('/tweet?t='+ env['omniauth.auth']['credentials']['token'] +'&s='+env['omniauth.auth']['credentials']['secret'])
+	env['omniauth.auth'].to_json
+	redirect to('/tweet?access=granted')
 end
 
 get '/auth/failure' do
@@ -90,5 +90,22 @@ get '/tweet' do
 		config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
 		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
 	end
-	client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
+	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
+	client.update("I'm tweeting with @gem!")
+	<<-HTML
+		<h3>Do you want to get out?</h3>
+		<p><a href="/logout">Logout</a></p>
+	HTML
+end
+
+get '/tweets' do
+	username = params[:username]
+	client = Twitter::REST::Client.new do |config|
+		config.consumer_key = "kVdTORs1LCUtcJXDE5AXm1WW9"
+		config.consumer_secret = "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
+		config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
+		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
+	end
+	tweetbyuser = client.get_all_tweets(username)
+	tweetbyuser.to_json
 end
