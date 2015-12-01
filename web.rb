@@ -58,22 +58,22 @@ get '/auth/twitter/callback' do
 	session[:username] = env['omniauth.auth']['info']['name']
 	session[:nickname] = env['omniauth.auth']['info']['nickname']
 	session[:location] = env['omniauth.auth']['info']['location']
-	# session[:imagen] = env['omniauth.auth']['info']['imagen']
-	# session[:description] = env['omniauth.auth']['info']['description']
-	# #session[:website] = env['omniauth.auth']['urls']['Website']
-	# #session[:twitter] = env['omniauth.auth']['urls']['Twitter']
+	session[:imagen] = env['omniauth.auth']['info']['imagen']
+	session[:description] = env['omniauth.auth']['info']['description']
+	token = env['omniauth.auth']['credentials']['token']
+	secret = env['omniauth.auth']['credentials']['secret']
 
 	<<-HTML
 	<h3>#{session[:username]}</h3>
 	<p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
-	<p>#{:description}</p>
-	<p>#{:location}</p>
+	<p>#{session[:description]}</p>
+	<p>#{session[:location]}</p>
 	<ul>
-		<li>#{params[:oauth_token]}</li>
-		<li>#{params[:oauth_verifier]}</li>
+		<li>#{token}</li>
+		<li>#{secret}</li>
 	</ul>
 	<p>
-		<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{params[:oauth_token]}&v=#{params[:oauth_verifier]}">Go to Tweets</a>
+		<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&v=#{secret}">Go to Tweets</a>
 	</p>
 	HTML
 
