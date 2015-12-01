@@ -48,6 +48,7 @@ get '/login' do
 end
 
 get '/auth/twitter/callback' do
+	p = params[:u]
 	#env['omniauth.auth'] ? session[:admin] = true : halt(401,'Not Authorized')
 	#"You're in!"
 	session[:admin] = true
@@ -60,14 +61,15 @@ get '/auth/twitter/callback' do
 	# #session[:website] = env['omniauth.auth']['urls']['Website']
 	# #session[:twitter] = env['omniauth.auth']['urls']['Twitter']
 
-	# <<-HTML
-	# <h3>#{session[:username]}</h3>
-	# <p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
-	# <p>#{:description}</p>
-	# <p>#{:location}</p>
-	# HTML
-	env['omniauth.auth'].to_json
-	redirect to('/tweet?access=granted')
+	<<-HTML
+	<h3>#{session[:username]}</h3>
+	<p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
+	<p>#{:description}</p>
+	<p>#{:location}</p>
+	HTML
+	
+	#env['omniauth.auth'].to_json
+	#redirect to('/tweetbyuser?access=granted')
 end
 
 get '/auth/failure' do
