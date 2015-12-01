@@ -117,6 +117,6 @@ get '/tweetbyuser' do
 		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
 	end
 	<<-HTML
-		#{client.user(params[:u])}
+		#{client.user('naranjodaniel')}
 	HTML
 end
