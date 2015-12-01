@@ -69,8 +69,10 @@ get '/tweetbyuser' do
 		config.access_token = params[:t]
 		config.access_token_secret = params[:s]
 	end
+	<<-HTML
 	#puts client.user(params[:u]).to_json
-	puts client.home_timeline.to_json
+	client.home_timeline
+	HTML
 end
 
 get '/tweet/:text' do
