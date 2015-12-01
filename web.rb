@@ -48,8 +48,8 @@ get '/auth/twitter/callback' do
 	<p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
 	<p>#{session[:description]}</p>
 	<p>#{session[:location]}</p>
-	<form method="get" action="/tweet/">
-		<textarea name="text" id="text" cols="10" rows="5"></textarea>
+	<form method="post" action="/tweet">
+		<textarea name="text" id="text" cols="20" rows="5"></textarea>
 		<p>
 			<input type="button" name="submit" value="Send">
 		</p>
@@ -71,12 +71,13 @@ get '/tweetbyuser' do
 	end
 	#puts client.user(params[:u]).to_json
 	client.home_timeline do |object|
-		puts object.text if object.is_a?(Twitter::Tweet)
+		puts object.text
 	end
 end
 
-get '/tweet/:text' do
-	text = params[:text]
+get '/tweet' do
+	request.body.rewind
+	data = JSON.parse request.body.read
 
 	client = Twitter::REST::Client.new do |config|
 		config.consumer_key = "kVdTORs1LCUtcJXDE5AXm1WW9"
@@ -85,10 +86,10 @@ get '/tweet/:text' do
 		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
 	end
 	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
-	client.update(text)
+	client.update(data['text'])
 	return status 404 if text.nil?
-	text.to_json
-	#redirect to('/tweetbyuser?u=naranjodaniel')
+	#text.to_json
+	redirect to('/tweetbyuser')
 end
 
 get '/private' do
