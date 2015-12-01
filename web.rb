@@ -48,9 +48,11 @@ get '/auth/twitter/callback' do
 	<p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
 	<p>#{session[:description]}</p>
 	<p>#{session[:location]}</p>
-	<form action="/tweet/">
-		<textarea name="text" id="text" cols="5" rows="3"></textarea>
-		<input type="button" name="submit" value="Send">
+	<form method="get" action="/tweet/">
+		<textarea name="text" id="text" cols="10" rows="5"></textarea>
+		<p>
+			<input type="button" name="submit" value="Send">
+		</p>
 	</form>
 	<p>
 		<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}">Go to Tweets</a>
