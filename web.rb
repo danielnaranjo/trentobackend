@@ -70,11 +70,9 @@ get '/tweetbyuser' do
 		config.access_token_secret = params[:s]
 	end
 	#puts client.user(params[:u]).to_json
-	<<-HTML
-		client.home_timeline do |object|
-			#{object.text} if object.is_a?(Twitter::Tweet)
-		end
-	HTML
+	client.home_timeline do |object|
+		puts object.text if object.is_a?(Twitter::Tweet)
+	end
 end
 
 get '/tweet/:text' do
