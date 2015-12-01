@@ -71,7 +71,9 @@ get '/tweetbyuser' do
 	end
 	#puts client.user(params[:u]).to_json
 	<<-HTML
-	#{client.home_timeline}
+		client.home_timeline do |object|
+			#{object.text} if object.is_a?(Twitter::Tweet)
+		end
 	HTML
 end
 
