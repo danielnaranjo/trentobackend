@@ -31,7 +31,7 @@ get '/' do
   <<-HTML
   <h3>Hey! Hey! Welcome to Trento* public API</h3>
   <p><a href="/login">Login with Twitter</a></p>
-  <p>#{params[:error]}</p>
+  <p>#{params[:error]}#{params[:status]}</p>
   <p>(*) Trento is a demo assigment for <a href=\"//real-trends.com/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Real Trends</a></p>
   <p>Crafted by <a href=\"//danielnaranjo.info/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Daniel Naranjo</a></p>
   HTML
@@ -116,5 +116,7 @@ get '/tweetbyuser' do
 		config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
 		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
 	end
-	client.user(params[:u]).to_json
+	<<-HTML
+		#{client.user(params[:u])}
+	HTML
 end
