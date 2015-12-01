@@ -14,13 +14,6 @@ configure do
 	enable :sessions
 end
 
-# client = Twitter::REST:Client.new do |config|
-	# config.consumer_key = "kVdTORs1LCUtcJXDE5AXm1WW9"
-	# config.consumer_secret = "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
-# 	config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
-# 	config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
-# end
-
 helpers do
 	def admin?
 		session[:admin]
@@ -55,10 +48,10 @@ get '/auth/twitter/callback' do
 	<p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
 	<p>#{session[:description]}</p>
 	<p>#{session[:location]}</p>
-	<ul>
-		<li>#{token}</li>
-		<li>#{secret}</li>
-	</ul>
+	<form action="/tweet/">
+		<textarea name="text" id="text" cols="5" rows="3"></textarea>
+		<input type="button" name="submit" value="Send">
+	</form>
 	<p>
 		<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}">Go to Tweets</a>
 	</p>
