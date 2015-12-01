@@ -75,7 +75,7 @@ get '/tweetbyuser' do
 	end
 end
 
-get '/tweet' do
+post '/tweet' do
 	request.body.rewind
 	data = JSON.parse request.body.read
 
