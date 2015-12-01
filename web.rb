@@ -111,8 +111,5 @@ end
 
 get '/logout' do
 	session[:admin] = nil
-	redirect to('/?status=You are log out successfully')
-	<<-HTML
-		<h3>You're Out!</h3>
-	HTML
+	redirect to('/?status=You+are+logout+successfully')
 end
