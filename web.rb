@@ -48,7 +48,8 @@ get '/login' do
 end
 
 get '/auth/twitter/callback' do
-	p = params[:u]
+	t = params[:oauth_token]
+	v = params[:oauth_verifier]
 	#env['omniauth.auth'] ? session[:admin] = true : halt(401,'Not Authorized')
 	#"You're in!"
 	session[:admin] = true
@@ -66,10 +67,15 @@ get '/auth/twitter/callback' do
 	<p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
 	<p>#{:description}</p>
 	<p>#{:location}</p>
+	<ul>
+		<li>#{:t}</li>
+		<li>#{:v}</li>
+	</ul>
 	HTML
-	
+
 	#env['omniauth.auth'].to_json
-	#redirect to('/tweetbyuser?access=granted')
+	# redirect to('/tweetbyuser?access=granted')
+	# oauth_token=q9aD1AAAAAAAaGlZAAABUV8y9Kc&oauth_verifier=4dWvqC5rvTbUD7TSVHDAOIioY4dlNgUL
 end
 
 get '/auth/failure' do
