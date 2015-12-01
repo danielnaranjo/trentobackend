@@ -31,6 +31,7 @@ get '/' do
   <<-HTML
   <h3>Hey! Hey! Welcome to Trento* public API</h3>
   <p><a href="/login">Login with Twitter</a></p>
+  <p>#{params[:error]}</p>
   <p>(*) Trento is a demo assigment for <a href=\"//real-trends.com/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Real Trends</a></p>
   <p>Crafted by <a href=\"//danielnaranjo.info/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Daniel Naranjo</a></p>
   HTML
