@@ -113,8 +113,8 @@ get '/tweetbyuser' do
 	client = Twitter::REST::Client.new do |config|
 		config.consumer_key = "kVdTORs1LCUtcJXDE5AXm1WW9"
 		config.consumer_secret = "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
-		config.access_token = params[:t]
-		config.access_token_secret = params[:v]
+		config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
+		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
 	end
 	client.user(params[:u]).to_json
 end
