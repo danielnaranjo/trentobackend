@@ -56,7 +56,7 @@ get '/auth/twitter/callback' do
 	session[:uid] = env['omniauth.auth']['uid']
 	session[:username] = env['omniauth.auth']['info']['name']
 	# session[:nickname] = env['omniauth.auth']['info']['nickname']
-	# session[:location] = env['omniauth.auth']['info']['location']
+	session[:location] = env['omniauth.auth']['info']['location']
 	# session[:imagen] = env['omniauth.auth']['info']['imagen']
 	# session[:description] = env['omniauth.auth']['info']['description']
 	# #session[:website] = env['omniauth.auth']['urls']['Website']
@@ -71,11 +71,12 @@ get '/auth/twitter/callback' do
 		<li>#{params[:oauth_token]}</li>
 		<li>#{params[:oauth_verifier]}</li>
 	</ul>
+	<p>
+		<a href="/tweetbyuser?t=#{params[:oauth_token]}&v=#{params[:oauth_verifier]}">Go to Tweets</a>
+	</p>
 	HTML
 
 	#env['omniauth.auth'].to_json
-	# redirect to('/tweetbyuser?access=granted')
-	# oauth_token=q9aD1AAAAAAAaGlZAAABUV8y9Kc&oauth_verifier=4dWvqC5rvTbUD7TSVHDAOIioY4dlNgUL
 end
 
 get '/auth/failure' do
