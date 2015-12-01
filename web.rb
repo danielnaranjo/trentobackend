@@ -68,8 +68,8 @@ get '/auth/twitter/callback' do
 	<p>#{:description}</p>
 	<p>#{:location}</p>
 	<ul>
-		<li>#{:t}</li>
-		<li>#{:v}</li>
+		<li>#{params[:oauth_token]}</li>
+		<li>#{params[:oauth_verifier]}</li>
 	</ul>
 	HTML
 
