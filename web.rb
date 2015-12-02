@@ -6,9 +6,12 @@ require 'omniauth-twitter'
 require 'twitter'
 require 'json'
 
+KEY = "kVdTORs1LCUtcJXDE5AXm1WW9"
+SEC = "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
+
 use Rack::Session::Cookie
 use OmniAuth::Builder do
-	provider :twitter, "kVdTORs1LCUtcJXDE5AXm1WW9", "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
+	provider :twitter, KEY, SEC
 end
 
 configure do
@@ -45,22 +48,25 @@ get '/auth/twitter/callback' do
 	secret = env['omniauth.auth']['credentials']['secret']
 
 	<<-HTML
-		<h3>#{session[:username]}</h3>
-		<p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
+		<h3>#{session[:username]} (<a href="/logout?nickname=#{session[:nickname]}">Get out here!</a>)</h3>
 		<p>#{session[:description]}</p>
 		<p>#{session[:location]}</p>
-		<p>
-			<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}">Go to Tweets</a>
-		</p>
+		<ul>
+			<li>
+				<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}">Go to Tweets</a>
+			</li>
+			<li>
+				<a href="/tweet?u=#{session[:nickname]}&t=#{token}&s=#{secret}&text=Playing+with+Twitter+API+Sinatra+on+Heroku+by+@NaranjoDaniel">Test Me :)</a>
+			</li>
+		</ul>
 	HTML
-
 	#env['omniauth.auth'].to_json
 end
 
 get '/tweetbyuser' do
 	client = Twitter::REST::Client.new do |config|
-		config.consumer_key = "kVdTORs1LCUtcJXDE5AXm1WW9"
-		config.consumer_secret = "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
+		config.consumer_key = KEY
+		config.consumer_secret = SEC
 		config.access_token = params[:t]
 		config.access_token_secret = params[:s]
 	end
@@ -68,21 +74,18 @@ get '/tweetbyuser' do
     jsonp result.map(&:attrs)
 end
 
-post '/tweet' do
-	request.body.rewind
-	data = JSON.parse request.body.read
-
+get '/tweet' do
 	client = Twitter::REST::Client.new do |config|
-		config.consumer_key = "kVdTORs1LCUtcJXDE5AXm1WW9"
-		config.consumer_secret = "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
-		config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
-		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
+		config.consumer_key = KEY
+		config.consumer_secret = SEC
+		config.access_token = params[:t]
+		config.access_token_secret = params[:s]
 	end
 	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
-	client.update(data['text'])
-	return status 404 if text.nil?
+	client.update(params['text'])
 	#text.to_json
-	redirect to('/tweetbyuser')
+	redirect to('/?status=Thanks+for+Playing')
+	session[:admin] = nil
 end
 
 get '/private' do
