@@ -45,17 +45,13 @@ get '/auth/twitter/callback' do
 	secret = env['omniauth.auth']['credentials']['secret']
 
 	<<-HTML
-	<h3>#{session[:username]}</h3>
-	<p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
-	<p>#{session[:description]}</p>
-	<p>#{session[:location]}</p>
-	<p>
-		<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}">Go to Tweets</a>
-	</p>
-
-	<ul>
-		<li></li>
-	</ul>
+		<h3>#{session[:username]}</h3>
+		<p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
+		<p>#{session[:description]}</p>
+		<p>#{session[:location]}</p>
+		<p>
+			<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}">Go to Tweets</a>
+		</p>
 	HTML
 
 	#env['omniauth.auth'].to_json
