@@ -1,6 +1,7 @@
 #web.rb
 
 require 'sinatra'
+require 'sinatra/jsonp'
 require 'omniauth-twitter'
 require 'twitter'
 require 'json'
@@ -48,15 +49,13 @@ get '/auth/twitter/callback' do
 	<p><a href="/logout?nickname=#{session[:nickname]}">Get out here!</a></p>
 	<p>#{session[:description]}</p>
 	<p>#{session[:location]}</p>
-	<form method="post" action="/tweet">
-		<textarea name="text" id="text" cols="20" rows="5"></textarea>
-		<p>
-			<input type="button" name="submit" value="Send">
-		</p>
-	</form>
 	<p>
 		<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}">Go to Tweets</a>
 	</p>
+
+	<ul>
+		<li></li>
+	</ul>
 	HTML
 
 	#env['omniauth.auth'].to_json
@@ -69,10 +68,8 @@ get '/tweetbyuser' do
 		config.access_token = params[:t]
 		config.access_token_secret = params[:s]
 	end
-	#puts client.user(params[:u]).to_json
-	client.home_timeline do |object|
-		puts object.text
-	end
+	result = client.user_timeline(params[:u])
+    jsonp result.map(&:attrs)
 end
 
 post '/tweet' do
@@ -98,8 +95,6 @@ get '/private' do
 end
 
 get '/login' do
-	#session[:admin] = true
-	#"You're Logged"
 	redirect to ('/auth/twitter')
 end
 
