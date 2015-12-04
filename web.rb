@@ -27,16 +27,16 @@ end
 #set :public_folder, File.dirname(__FILE__) + '/public'
 
 get '/' do
-  # <<-HTML
-  # <h3>Hey! Hey! Welcome to Trento* public API</h3>
-  # <p><a href="/login">Login with Twitter</a></p>
-  # <p>#{params[:status]}</p>
-  # <p>(*) Trento is a demo assigment for <a href=\"//real-trends.com/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Real Trends</a></p>
-  # <p>Crafted by <a href=\"//danielnaranjo.info/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Daniel Naranjo</a></p>
-  # HTML
+  <<-HTML
+  <h3>Hey! Hey! Welcome to Trento* public API</h3>
+  <p><a href="/login">Login with Twitter</a></p>
+  <p>#{params[:status]}</p>
+  <p>(*) Trento is a demo assigment for <a href=\"//real-trends.com/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Real Trends</a></p>
+  <p>Crafted by <a href=\"//danielnaranjo.info/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Daniel Naranjo</a></p>
+  HTML
 
   #render
-  erb :index, :layout => :site
+  #erb :index, :layout => :site
 end
 
 get '/auth/twitter/callback' do
@@ -71,10 +71,10 @@ get '/auth/twitter/callback' do
 	#erb :user, :layout => :site
 
 	# JSON response
-	env['omniauth.auth'].to_json
+	#env['omniauth.auth'].to_json
 
 	#redirect to
-	#redirect to ('/?u=#{session[:nickname]}&t=#{token}&s=#{secret}"')
+	redirect to ('/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}"')
 end
 
 get '/tweetbyuser' do
