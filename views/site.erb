@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Trento</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- cdn -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.10.1/bootstrap-social.min.css">
+	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.min.css">
+	<!-- styles -->
+	<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-default navbar-fixed-top leblue">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Trento</a>
+				</div>
+				<div id="navbar" class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li class="active"><a href="#">Home</a></li>
+						<% if session[:uid] %>
+						<li><a href="/tweetbyuser?u=<%=session[:nickname]%>&t=<%=session[:token]%>&s=<%=session[:secret]%>"><%=session[:username]%></a></li>
+						<li><a href="/logout">Logout</a></li>
+						<% else %>
+						<li><a href="/login">Sign in / Sign Up</a></li>
+						<% end %>
+						<li><a id="hireMe">Get in touch!</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<%=yield %>
+
+	<footer class="footer" style="position:absolute">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9 col-sm-6 col-xs-12">
+					&copy 2015 Trento is a demo assigment for <a href="//real-trends.com/?utm_source=trento&utm_campaing=assigments&utm_medium=referral" target="_blank">Real Trends</a>
+				</div>
+				<div class="col-md-3 col-sm-6 hidden-xs">
+					Crafted by <a href="//danielnaranjo.info/?utm_source=trento&utm_campaing=assigments&utm_medium=referral" target="_blank">Daniel Naranjo</a>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<!-- js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/js/modal.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/js/tooltip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-parallax/1.1.3/jquery-parallax-min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/3.3.2/masonry.pkgd.min.js"></script>
+	<script src="/main.js"></script>
+</body>
+</html>

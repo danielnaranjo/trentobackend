@@ -24,14 +24,19 @@ helpers do
 	end
 end
 
+set :public_folder, File.dirname(__FILE__) + '/public'
+
 get '/' do
-  <<-HTML
-  <h3>Hey! Hey! Welcome to Trento* public API</h3>
-  <p><a href="/login">Login with Twitter</a></p>
-  <p>#{params[:status]}</p>
-  <p>(*) Trento is a demo assigment for <a href=\"//real-trends.com/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Real Trends</a></p>
-  <p>Crafted by <a href=\"//danielnaranjo.info/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Daniel Naranjo</a></p>
-  HTML
+  # <<-HTML
+  # <h3>Hey! Hey! Welcome to Trento* public API</h3>
+  # <p><a href="/login">Login with Twitter</a></p>
+  # <p>#{params[:status]}</p>
+  # <p>(*) Trento is a demo assigment for <a href=\"//real-trends.com/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Real Trends</a></p>
+  # <p>Crafted by <a href=\"//danielnaranjo.info/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Daniel Naranjo</a></p>
+  # HTML
+
+  #render
+  erb :index, :layout => :site
 end
 
 get '/auth/twitter/callback' do
@@ -44,23 +49,32 @@ get '/auth/twitter/callback' do
 	session[:location] = env['omniauth.auth']['info']['location']
 	session[:imagen] = env['omniauth.auth']['info']['imagen']
 	session[:description] = env['omniauth.auth']['info']['description']
-	token = env['omniauth.auth']['credentials']['token']
-	secret = env['omniauth.auth']['credentials']['secret']
+	session[:token] = env['omniauth.auth']['credentials']['token']
+	session[:secret] = env['omniauth.auth']['credentials']['secret']
 
-	<<-HTML
-		<h3>#{session[:username]} (<a href="/logout?nickname=#{session[:nickname]}">Get out here!</a>)</h3>
-		<p>#{session[:description]}</p>
-		<p>#{session[:location]}</p>
-		<ul>
-			<li>
-				<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}">Go to Tweets</a>
-			</li>
-			<li>
-				<a href="/tweet?u=#{session[:nickname]}&t=#{token}&s=#{secret}&text=Playing+with+Twitter+API+Sinatra+on+Heroku+by+@NaranjoDaniel">Test Me :)</a>
-			</li>
-		</ul>
-	HTML
-	#env['omniauth.auth'].to_json
+	# HTML basic
+	# <<-HTML
+	# 	<h3>#{session[:username]} (<a href="/logout?nickname=#{session[:nickname]}">Get out here!</a>)</h3>
+	# 	<p>#{session[:description]}</p>
+	# 	<p>#{session[:location]}</p>
+	# 	<ul>
+	# 		<li>
+	# 			<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}">Go to Tweets</a>
+	# 		</li>
+	# 		<li>
+	# 			<a href="/tweet?u=#{session[:nickname]}&t=#{token}&s=#{secret}&text=Playing+with+Twitter+API+Sinatra+on+Heroku+by+@NaranjoDaniel">Test Me :)</a>
+	# 		</li>
+	# 	</ul>
+	# HTML
+
+	#erb
+	#erb :user, :layout => :site
+
+	# JSON response
+	env['omniauth.auth'].to_json
+
+	#redirect to
+	#redirect to ('/?u=#{session[:nickname]}&t=#{token}&s=#{secret}"')
 end
 
 get '/tweetbyuser' do
@@ -74,7 +88,10 @@ get '/tweetbyuser' do
     jsonp result.map(&:attrs)
 end
 
-get '/tweet' do
+post '/tweet' do
+	request.body.rewind
+	data = JSON.parse request.body.read
+
 	client = Twitter::REST::Client.new do |config|
 		config.consumer_key = KEY
 		config.consumer_secret = SEC
@@ -82,9 +99,9 @@ get '/tweet' do
 		config.access_token_secret = params[:s]
 	end
 	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
-	client.update(params['text'])
-	#text.to_json
-	redirect to('/?status=Thanks+for+Playing')
+	client.update(data['text'])
+	text.to_json
+	#redirect to('/?status=Thanks+for+Playing')
 	session[:admin] = nil
 end
 
@@ -104,5 +121,13 @@ end
 
 get '/logout' do
 	session[:admin] = nil
+	session[:uid] = nil
+	session[:username] = nil
+	session[:nickname] = nil
+	session[:location] = nil
+	session[:imagen] = nil
+	session[:description] = nil
+	session[:token] = nil
+	session[:secret] = nil
 	redirect to('/?status=You+are+logout+successfully')
 end
