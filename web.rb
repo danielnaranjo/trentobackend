@@ -41,31 +41,36 @@ end
 
 get '/auth/twitter/callback' do
 	#env['omniauth.auth'] ? session[:admin] = true : halt(401,'Not Authorized')
+	
 	#"You're in!"
 	session[:admin] = true
+
+	# varibles
 	session[:uid] = env['omniauth.auth']['uid']
 	session[:username] = env['omniauth.auth']['info']['name']
 	session[:nickname] = env['omniauth.auth']['info']['nickname']
 	session[:location] = env['omniauth.auth']['info']['location']
 	session[:imagen] = env['omniauth.auth']['info']['imagen']
 	session[:description] = env['omniauth.auth']['info']['description']
+	
+	# Token
 	session[:token] = env['omniauth.auth']['credentials']['token']
 	session[:secret] = env['omniauth.auth']['credentials']['secret']
 
 	# HTML basic
-	# <<-HTML
-	# 	<h3>#{session[:username]} (<a href="/logout?nickname=#{session[:nickname]}">Get out here!</a>)</h3>
-	# 	<p>#{session[:description]}</p>
-	# 	<p>#{session[:location]}</p>
-	# 	<ul>
-	# 		<li>
-	# 			<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}">Go to Tweets</a>
-	# 		</li>
-	# 		<li>
-	# 			<a href="/tweet?u=#{session[:nickname]}&t=#{token}&s=#{secret}&text=Playing+with+Twitter+API+Sinatra+on+Heroku+by+@NaranjoDaniel">Test Me :)</a>
-	# 		</li>
-	# 	</ul>
-	# HTML
+	<<-HTML
+		<h3>#{session[:username]} (<a href="/logout?nickname=#{session[:nickname]}">Get out here!</a>)</h3>
+		<p>#{session[:description]}</p>
+		<p>#{session[:location]}</p>
+		<ul>
+			<li>
+				<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{session[:token]}&s=#{session[:secret]}">Go to Tweets</a>
+			</li>
+			<li>
+				<a href="/tweet?u=#{session[:nickname]}&t=#{session[:token]}&s=#{session[:secret]}&text=Playing+with+Twitter+API+Sinatra+on+Heroku+by+@NaranjoDaniel">Test Me :)</a>
+			</li>
+		</ul>
+	HTML
 
 	#erb
 	#erb :user, :layout => :site
@@ -74,36 +79,43 @@ get '/auth/twitter/callback' do
 	#env['omniauth.auth'].to_json
 
 	#redirect to
-	redirect to ('/tweetbyuser?u=#{session[:nickname]}&t=#{token}&s=#{secret}"')
+	#redirect to ('/tweetbyuser?u=#{session[:nickname]}&t=#{session[:token]}&s=#{session[:secret]}')
 end
 
 get '/tweetbyuser' do
+	#"You're in!"
+	session[:admin] = true
+
+	# Configure twitter client
 	client = Twitter::REST::Client.new do |config|
 		config.consumer_key = KEY
 		config.consumer_secret = SEC
 		config.access_token = params[:t]
 		config.access_token_secret = params[:s]
 	end
+
+	# Map and JSONP result
 	result = client.user_timeline(params[:u])
     jsonp result.map(&:attrs)
 end
 
-post '/tweet' do
-	request.body.rewind
-	data = JSON.parse request.body.read
+# post '/tweet' do
+# 	request.body.rewind
+# 	data = JSON.parse request.body.read
 
-	client = Twitter::REST::Client.new do |config|
-		config.consumer_key = KEY
-		config.consumer_secret = SEC
-		config.access_token = params[:t]
-		config.access_token_secret = params[:s]
-	end
-	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
-	client.update(data['text'])
-	text.to_json
-	#redirect to('/?status=Thanks+for+Playing')
-	session[:admin] = nil
-end
+# 	client = Twitter::REST::Client.new do |config|
+# 		config.consumer_key = KEY
+# 		config.consumer_secret = SEC
+# 		config.access_token = params[:t]
+# 		config.access_token_secret = params[:s]
+# 	end
+# 	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
+# 	client.update(data['text'])
+# 	text.to_json
+
+# 	#redirect to('/?status=Thanks+for+Playing')
+# 	#session[:admin] = nil
+# end
 
 get '/private' do
 	halt(401,'Not Authorized') unless admin?
