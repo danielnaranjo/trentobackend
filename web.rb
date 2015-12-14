@@ -99,23 +99,23 @@ get '/tweetbyuser' do
     jsonp result.map(&:attrs)
 end
 
-# post '/tweet' do
-# 	request.body.rewind
-# 	data = JSON.parse request.body.read
+post '/tweet' do
+	request.body.rewind
+	data = JSON.parse request.body.read
 
-# 	client = Twitter::REST::Client.new do |config|
-# 		config.consumer_key = KEY
-# 		config.consumer_secret = SEC
-# 		config.access_token = params[:t]
-# 		config.access_token_secret = params[:s]
-# 	end
-# 	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
-# 	client.update(data['text'])
-# 	text.to_json
+	client = Twitter::REST::Client.new do |config|
+		config.consumer_key = KEY
+		config.consumer_secret = SEC
+		config.access_token = params[:t]
+		config.access_token_secret = params[:s]
+	end
+	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
+	client.update(data['text'])
+	text.to_json
 
-# 	#redirect to('/?status=Thanks+for+Playing')
-# 	#session[:admin] = nil
-# end
+	#redirect to('/?status=Thanks+for+Playing')
+	#session[:admin] = nil
+end
 
 get '/private' do
 	halt(401,'Not Authorized') unless admin?
