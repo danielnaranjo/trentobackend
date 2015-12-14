@@ -86,6 +86,12 @@ get '/tweetbyuser' do
 	#"You're in!"
 	session[:admin] = true
 
+	if params[:u] != ''
+		user = params[:u]
+	else 
+		user = session[:username]
+	end
+
 	# Configure twitter client
 	client = Twitter::REST::Client.new do |config|
 		config.consumer_key = KEY
@@ -95,7 +101,7 @@ get '/tweetbyuser' do
 	end
 
 	# Map and JSONP result
-	result = client.user_timeline(session[:username])
+	result = client.user_timeline(user)
     jsonp result.map(&:attrs)
 end
 
