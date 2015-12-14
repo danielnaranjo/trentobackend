@@ -58,19 +58,19 @@ get '/auth/twitter/callback' do
 	session[:secret] = env['omniauth.auth']['credentials']['secret']
 
 	# HTML basic
-	<<-HTML
-		<h3>#{session[:username]} (<a href="/logout?nickname=#{session[:nickname]}">Get out here!</a>)</h3>
-		<p>#{session[:description]}</p>
-		<p>#{session[:location]}</p>
-		<ul>
-			<li>
-				<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{session[:token]}&s=#{session[:secret]}">Go to Tweets</a>
-			</li>
-			<li>
-				<a href="/tweet?u=#{session[:nickname]}&t=#{session[:token]}&s=#{session[:secret]}&text=Playing+with+Twitter+API+Sinatra+on+Heroku+by+@NaranjoDaniel">Test Me :)</a>
-			</li>
-		</ul>
-	HTML
+	# <<-HTML
+	# 	<h3>#{session[:username]} (<a href="/logout?nickname=#{session[:nickname]}">Get out here!</a>)</h3>
+	# 	<p>#{session[:description]}</p>
+	# 	<p>#{session[:location]}</p>
+	# 	<ul>
+	# 		<li>
+	# 			<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{session[:token]}&s=#{session[:secret]}">Go to Tweets</a>
+	# 		</li>
+	# 		<li>
+	# 			<a href="/tweet?u=#{session[:nickname]}&t=#{session[:token]}&s=#{session[:secret]}&text=Playing+with+Twitter+API+Sinatra+on+Heroku+by+@NaranjoDaniel">Test Me :)</a>
+	# 		</li>
+	# 	</ul>
+	# HTML
 
 	#erb
 	#erb :user, :layout => :site
@@ -79,7 +79,7 @@ get '/auth/twitter/callback' do
 	#env['omniauth.auth'].to_json
 
 	#redirect to
-	#redirect to ('/tweetbyuser?u=#{session[:nickname]}&t=#{session[:token]}&s=#{session[:secret]}')
+	redirect to ('/tweetbyuser')
 end
 
 get '/tweetbyuser' do
@@ -90,12 +90,12 @@ get '/tweetbyuser' do
 	client = Twitter::REST::Client.new do |config|
 		config.consumer_key = KEY
 		config.consumer_secret = SEC
-		config.access_token = params[:t]
-		config.access_token_secret = params[:s]
+		config.access_token = session[:token]
+		config.access_token_secret = session[:secret]
 	end
 
 	# Map and JSONP result
-	result = client.user_timeline(params[:u])
+	result = client.user_timeline(session[:username])
     jsonp result.map(&:attrs)
 end
 
@@ -109,6 +109,7 @@ post '/tweet' do
 		config.access_token = params[:t]
 		config.access_token_secret = params[:s]
 	end
+
 	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
 	client.update(data['text'])
 	text.to_json
