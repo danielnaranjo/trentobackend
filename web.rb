@@ -39,7 +39,7 @@ end
 get '/auth/twitter/callback' do
 	# Cross Domain Access
 	response.headers['Access-Control-Allow-Origin'] = '*'
-	
+
 	#"You're in!"
 	session[:admin] = true
 
@@ -150,4 +150,21 @@ get '/logout' do
 	session[:token] = nil
 	session[:secret] = nil
 	redirect to('/?status=You+are+logout+successfully')
+end
+
+get '/gettingbyuser' do
+	# Cross Domain Access
+	response.headers['Access-Control-Allow-Origin'] = '*'
+
+	# Configure twitter client
+	client = Twitter::REST::Client.new do |config|
+		config.consumer_key = KEY
+		config.consumer_secret = SEC
+		config.access_token = params[:t]
+		config.access_token_secret = params[:s]
+	end
+
+	# Map and JSONP result
+	result = client.user_timeline(params[:u])
+	jsonp result.map(&:attrs)
 end
