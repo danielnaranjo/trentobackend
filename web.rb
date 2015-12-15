@@ -1,7 +1,9 @@
 require 'sinatra'
+require 'sinatra/base'
 require 'sinatra/jsonp'
 require 'omniauth-twitter'
 require 'twitter'
+require 'json'
 
 KEY = "kVdTORs1LCUtcJXDE5AXm1WW9"
 SEC = "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
