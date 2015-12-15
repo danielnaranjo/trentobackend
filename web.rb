@@ -85,6 +85,11 @@ get '/tweetbyuser' do
 end
 
 post '/tweet' do
+	
+	if session[:admin] = nil
+		redirect to ('/auth/failure?status=Not+logged')
+	end
+
 	#"You said '#{params[:message]}'"
 
 	client = Twitter::REST::Client.new do |config|
@@ -92,8 +97,6 @@ post '/tweet' do
 		config.consumer_secret = SEC
 		config.access_token = session[:token]
 		config.access_token_secret = session[:secret]
-		config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
-		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
 	end
 
 	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
