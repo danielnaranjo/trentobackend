@@ -9,6 +9,7 @@ KEY = "kVdTORs1LCUtcJXDE5AXm1WW9"
 SEC = "pPZ6uJPEyT1jWyi0N00yNa1c18w79zDBqht3rL2GvvkIR3vYBf"
 
 use Rack::Session::Cookie
+set :protection, :except => [:json_csrf]
 
 use OmniAuth::Builder do
 	provider :twitter, KEY, SEC
