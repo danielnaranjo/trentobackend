@@ -24,23 +24,18 @@ helpers do
 	end
 end
 
-#set :public_folder, File.dirname(__FILE__) + '/public'
-
 get '/' do
   <<-HTML
   <h3>Hey! Hey! Welcome to Trento* public API</h3>
-  <p><a href="/login">Login with Twitter</a></p>
+  <p><a href="/login">Sign in with Twitter</a></p>
   <p>#{params[:status]}</p>
   <p>(*) Trento is a demo assigment for <a href=\"//real-trends.com/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Real Trends</a></p>
   <p>Crafted by <a href=\"//danielnaranjo.info/?utm_source=trento&utm_campaing=assigments&utm_medium=referral\" target=\"_blank\">Daniel Naranjo</a></p>
   HTML
 
-  #render
-  #erb :index, :layout => :site
 end
 
 get '/auth/twitter/callback' do
-	#env['omniauth.auth'] ? session[:admin] = true : halt(401,'Not Authorized')
 	
 	#"You're in!"
 	session[:admin] = true
@@ -57,32 +52,16 @@ get '/auth/twitter/callback' do
 	session[:token] = env['omniauth.auth']['credentials']['token']
 	session[:secret] = env['omniauth.auth']['credentials']['secret']
 
-	# HTML basic
-	# <<-HTML
-	# 	<h3>#{session[:username]} (<a href="/logout?nickname=#{session[:nickname]}">Get out here!</a>)</h3>
-	# 	<p>#{session[:description]}</p>
-	# 	<p>#{session[:location]}</p>
-	# 	<ul>
-	# 		<li>
-	# 			<a href="/tweetbyuser?u=#{session[:nickname]}&t=#{session[:token]}&s=#{session[:secret]}">Go to Tweets</a>
-	# 		</li>
-	# 		<li>
-	# 			<a href="/tweet?u=#{session[:nickname]}&t=#{session[:token]}&s=#{session[:secret]}&text=Playing+with+Twitter+API+Sinatra+on+Heroku+by+@NaranjoDaniel">Test Me :)</a>
-	# 		</li>
-	# 	</ul>
-	# HTML
-
-	#erb
-	#erb :user, :layout => :site
-
-	# JSON response
-	#env['omniauth.auth'].to_json
-
 	#redirect to
 	redirect to ('/tweetbyuser')
 end
 
 get '/tweetbyuser' do
+
+	if session[:admin] = nil
+		redirect to ('/auth/failure?status=Not+logged')
+	end
+
 	#"You're in!"
 	session[:admin] = true
 
@@ -102,26 +81,36 @@ get '/tweetbyuser' do
 
 	# Map and JSONP result
 	result = client.user_timeline(user)
-    jsonp result.map(&:attrs)
+	jsonp result.map(&:attrs)
 end
 
 post '/tweet' do
-	request.body.rewind
-	data = JSON.parse request.body.read
+	#"You said '#{params[:message]}'"
 
 	client = Twitter::REST::Client.new do |config|
 		config.consumer_key = KEY
 		config.consumer_secret = SEC
-		config.access_token = params[:t]
-		config.access_token_secret = params[:s]
+		config.access_token = session[:token]
+		config.access_token_secret = session[:secret]
+		config.access_token = "110495478-qnrKkkokaooS4xZhfjwI3m2xL9Mj5gF6xKFW5Lsh"
+		config.access_token_secret = "IRyN7oP4lPMQzv7Glhqc5J1dDM6p578gyJ3XBjalX17fG"
 	end
 
 	#client.update('Tonight show: Playing with Twitter API + Sinatra on Heroku')
-	client.update(data['text'])
-	text.to_json
+	client.update(params[:message])
+	params[:message].to_json
+end
 
-	#redirect to('/?status=Thanks+for+Playing')
-	#session[:admin] = nil
+get '/form' do
+	if session[:admin] = nil
+		redirect to ('/auth/failure?status=Not+logged')
+	end
+	<<-HTML
+	<form action="/tweet" method="post">
+	<input type="text" size="100" name="message" value="Play with Ruby and Sinatra while I listen to Frank singing My way https://www.youtube.com/watch?v=5AVOpNR2PIs">
+	<input type="submit">
+	</form>
+	HTML
 end
 
 get '/private' do
@@ -130,7 +119,11 @@ get '/private' do
 end
 
 get '/login' do
-	redirect to ('/auth/twitter')
+	if session[:admin] == nil
+		redirect to ('/auth/twitter')
+	else
+		redirect to('/tweetbyuser')
+	end
 end
 
 get '/auth/failure' do
