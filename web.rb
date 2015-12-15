@@ -37,6 +37,8 @@ get '/' do
 end
 
 get '/auth/twitter/callback' do
+	# Cross Domain Access
+	response.headers['Access-Control-Allow-Origin'] = '*'
 	
 	#"You're in!"
 	session[:admin] = true
@@ -58,6 +60,8 @@ get '/auth/twitter/callback' do
 end
 
 get '/tweetbyuser' do
+	# Cross Domain Access
+	response.headers['Access-Control-Allow-Origin'] = '*'
 
 	if session[:admin] = nil
 		redirect to ('/auth/failure?status=Not+logged')
