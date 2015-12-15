@@ -66,6 +66,7 @@ DEPENDENCIES
   omniauth-twitter
   sinatra
   twitter
+  sinatra-json
 
 BUNDLED WITH
    1.10.6
