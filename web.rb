@@ -185,7 +185,7 @@ post '/send' do
 	'Tweet was sent'.to_json
 end
 
-delete '/delete' do
+get '/delete' do
 	# Cross Domain Access
 	response.headers['Access-Control-Allow-Origin'] = '*'
 
