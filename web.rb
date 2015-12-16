@@ -170,6 +170,9 @@ get '/gettingbyuser' do
 end
 
 post '/send' do
+	
+	# Cross Domain Access
+	response.headers['Access-Control-Allow-Origin'] = '*'
 
 	client = Twitter::REST::Client.new do |config|
 		config.consumer_key = KEY
