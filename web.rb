@@ -170,7 +170,7 @@ get '/gettingbyuser' do
 end
 
 post '/send' do
-	
+
 	# Cross Domain Access
 	response.headers['Access-Control-Allow-Origin'] = '*'
 
@@ -183,4 +183,18 @@ post '/send' do
 
 	client.update(params[:message])
 	'Tweet was sent'.to_json
+end
+
+delete '/delete' do
+	# Cross Domain Access
+	response.headers['Access-Control-Allow-Origin'] = '*'
+
+	client = Twitter::REST::Client.new do |config|
+		config.consumer_key = KEY
+		config.consumer_secret = SEC
+		config.access_token = params[:t]
+		config.access_token_secret = params[:s]
+	end
+
+	client.destroy(params[:id])
 end
