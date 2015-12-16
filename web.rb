@@ -168,3 +168,16 @@ get '/gettingbyuser' do
 	result = client.user_timeline(params[:u])
 	jsonp result.map(&:attrs)
 end
+
+post '/send' do
+
+	client = Twitter::REST::Client.new do |config|
+		config.consumer_key = KEY
+		config.consumer_secret = SEC
+		config.access_token = params[:t]
+		config.access_token_secret = params[:s]
+	end
+
+	client.update(params[:message])
+	'Tweet was sent'.to_json
+end
